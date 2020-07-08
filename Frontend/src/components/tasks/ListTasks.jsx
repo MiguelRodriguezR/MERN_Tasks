@@ -1,26 +1,34 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useContext } from "react";
 import Task from "./Task";
+import ProjectContext from "../../context/projects/projectContex";
+import TaskContext from "../../context/tasks/taskContext";
 
 const ListTasks = () => {
- const tasks = [
-    { name: 'e1', complete: true },
-    { name: 'e2', complete: false },
-    { name: 'e3', complete: true },
-  ];
+  const projectContext = useContext(ProjectContext);
+  const {project, deleteProject} = projectContext;
+
+  const tasksContext = useContext(TaskContext);
+  const {tasksProject} = tasksContext;
+
+  if(!project) return <h2>Select a Project</h2>
+
+  const deleteP = () => {
+    deleteProject(project);
+  }
 
   return (
     <Fragment>
-      <h2> Project: t1</h2>
+      <h2> Project: {project.name}</h2>
       <ul className="listado-tareas">
-        {tasks.length === 0 ? (
+        {tasksProject.length === 0 ? (
           <li className="tarea"> No Tasks </li>
         ) : (
-          tasks.map((task) => <Task task={task}></Task>)
+          tasksProject.map((task) => <Task task={task}></Task>)
         )}
         
       </ul>
 
-      <button className="btn btn-eliminar"> Delete Project &times;</button>
+      <button className="btn btn-eliminar" onClick={deleteP}> Delete Project &times;</button>
     </Fragment>
   );
 };

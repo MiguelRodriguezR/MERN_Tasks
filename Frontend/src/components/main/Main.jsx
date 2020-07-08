@@ -4,18 +4,21 @@ import Login from "../auth/Login";
 import NewAccount from "../auth/NewAcount";
 import Projects from "../projects/Projects";
 import ProjectState from "../../context/projects/projectState";
+import TaskState from "../../context/tasks/taskState";
 
 const Main = () => {
   return (
-    <ProjectState>
-      <Router>
-        <Switch>
-          <Route exact path="/" component={Login}></Route>
-          <Route exact path="/new-account" component={NewAccount}></Route>
-          <Route exact path="/projects" component={Projects}></Route>
-        </Switch>
-      </Router>
-    </ProjectState>
+    <TaskState>
+      <ProjectState>
+        <Router>
+          <Switch>
+            <Route exact path="/" component={Login}></Route>
+            <Route exact path="/new-account" component={NewAccount}></Route>
+            <Route exact path="/projects" component={Projects}></Route>
+          </Switch>
+        </Router>
+      </ProjectState>
+    </TaskState>
   );
 };
 
