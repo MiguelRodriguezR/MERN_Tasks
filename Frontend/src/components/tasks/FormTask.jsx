@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import ProjectContext from "../../context/projects/projectContex";
 import TaskContext from "../../context/tasks/taskContext";
 
@@ -7,35 +7,59 @@ const FormTask = () => {
   const { project } = projectContext;
 
   const taskContext = useContext(TaskContext);
-  const { errorTask, addTask, validateTask, getProjectTasks } = taskContext;
+  const {
+    selectedTask,
+    errorTask,
+    addTask,
+    validateTask,
+    getProjectTasks,
+    updateTask,
+    cleanActualTask,
+  } = taskContext;
 
-  const [task,saveTask] = useState({
-    name: '',
-  })
+  const [task, saveTask] = useState({
+    name: "",
+  });
+
+  useEffect(() => {
+    if (selectedTask !== null) {
+      saveTask(selectedTask);
+    } else {
+      saveTask({ name: "" });
+    }
+  }, [selectedTask]);
 
   if (!project) return null;
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     saveTask({
       ...task,
-      [e.target.name]: e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const addTaskMethod = () => {
+    task.projectId = project.id;
+    task.state = false;
+    addTask(task);
+  };
+
+  const editTaskMethod = () => {
+    updateTask(task);
+    cleanActualTask();
+  };
 
   const createTask = (e) => {
     e.preventDefault();
 
-    if(task.name.trim() === ''){
+    if (task.name.trim() === "") {
       validateTask();
       return;
     }
 
-    task.projectId = project.id;
-    task.state = false;
-    addTask(task)
-    saveTask({name: ''})
-    getProjectTasks(project.id)
-
+    selectedTask ? editTaskMethod() : addTaskMethod();
+    saveTask({ name: "" });
+    getProjectTasks(project.id);
   };
 
   return (
@@ -47,19 +71,21 @@ const FormTask = () => {
             className="input-text"
             placeholder="Task Name"
             name="name"
-            value = {task.name}
-            onChange = {handleChange}
+            value={task.name}
+            onChange={handleChange}
           />
         </div>
         <div className="contenedor-input">
           <input
             type="submit"
             className="btn btn-primario btn-submit btn-block"
-            value="Add Task"
+            value={selectedTask ? "Edit Task" : "Add Task"}
           />
         </div>
       </form>
-      {errorTask ? <p className="mensaje error">Task name is required</p>: null}
+      {errorTask ? (
+        <p className="mensaje error">Task name is required</p>
+      ) : null}
     </div>
   );
 };
