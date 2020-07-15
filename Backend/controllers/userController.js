@@ -19,8 +19,8 @@ exports.createUser = async (req, res) => {
             return res.status(400).json({msg: 'User already exist'})
         }
         const salt = await bcryptjs.genSalt(10);
-        user.password = await bcryptjs.hash(password, salt);
         user = new User(req.body);
+        user.password = await bcryptjs.hash(password, salt);
         await user.save();
 
         //create token
