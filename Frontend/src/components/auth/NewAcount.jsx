@@ -1,7 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
+import AlertContext from "../../context/alerts/alertContext";
+import AuthContext from "../../context/auth/authContext";
 
-const NewAccount = () => {
+const NewAccount = (props) => {
+
+  const authContext = useContext(AuthContext)
+  const {message, logged, registerUser} = authContext; 
+  const alertContext = useContext(AlertContext);
+  const {alert, showAlert} = alertContext; 
+
+  useEffect(()=>{
+    if(logged){
+      props.history.push('/projects')
+    }
+    if(message){
+      showAlert(message.msg, message.category);
+    }
+    // eslint-disable-next-line
+  },[message, logged, props.history])
+
   const [user, saveUser] = useState({
     name: "",
     email: "",
@@ -18,10 +36,32 @@ const NewAccount = () => {
 
   const submit = (e) => {
     e.preventDefault();
+
+    const emptyField = Object.entries(user).find( f => f[1].trim() === '');
+    if(emptyField){
+      showAlert(`${emptyField[0]} is required`, 'alerta-error');
+      return;
+    }
+    if(user.password.length < 6){
+      showAlert(`password must contain 6 characters or more`, 'alerta-error');
+      return;
+    }
+    if(user.password !== user.confirm){
+      showAlert(`password and confirm must be equal`, 'alerta-error');
+      return;
+    }
+
+    registerUser({
+      name: user.name,
+      email: user.email,
+      password: user.password
+    })
+
   };
 
   return (
     <div className="form-usuario">
+      {alert ? ( <div className={`alerta ${alert.category}`}>{alert.msg}</div> ) : null}
       <div className="contenedor-form sombra-dark">
         <h1>Create Account</h1>
         <form action="" onSubmit={submit}>

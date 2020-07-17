@@ -62,10 +62,8 @@ exports.updateProject = async (req, res) =>{
 
     const {name} = req.body;
     const newProject = {};
-    if(name){
-        newProject.name = name;
-    } 
-
+    if(name) newProject.name = name;
+     
     try {
 
         let project = await Project.findById(req.params.id);
