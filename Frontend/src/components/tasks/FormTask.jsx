@@ -39,7 +39,7 @@ const FormTask = () => {
   };
 
   const addTaskMethod = () => {
-    task.projectId = project.id;
+    task.project = project.id;
     task.state = false;
     addTask(task);
   };

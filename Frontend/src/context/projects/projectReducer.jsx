@@ -5,6 +5,7 @@ import {
   VALIDATE_FORM,
   ACTUAL_PROJECT,
   DELETE_PROJECT,
+  PROJECT_ERROR,
 } from "../../types";
 
 export default (state, action) => {
@@ -41,6 +42,11 @@ export default (state, action) => {
         ...state,
         projects: state.projects.filter((p) => p.id !== action.payload.id),
         project: null,
+      };
+    case PROJECT_ERROR:
+      return {
+        ...state,
+        message: action.payload,
       };
     default:
       return state;

@@ -2,14 +2,20 @@ import React, { useContext, useEffect } from "react";
 import Project from "./Project";
 import ProjectContext from "../../context/projects/projectContex";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
+import AlertContext from "../../context/alerts/alertContext";
 
 const ListProjects = () => {
-  const { projects, getProjects } = useContext(ProjectContext);
+  const { message, projects, getProjects } = useContext(ProjectContext);
+  const { alert, showAlert } = useContext(AlertContext);
 
   useEffect(() => {
+    if(message){
+      showAlert(message.msg,message.category);
+    }
+
     getProjects();
     // eslint-disable-next-line
-  }, []);
+  }, [message]);
 
   if (projects.length === 0)
     return (
@@ -24,9 +30,10 @@ const ListProjects = () => {
 
   return (
     <ul className="listado-proyectos">
+      {alert ? ( <div className={`alerta ${alert.category}`}>{alert.msg}</div> ) : null}
       <TransitionGroup>
       {projects.map((project) => (
-        <CSSTransition key={project.id} timeout={200} classNames="proyecto">
+        <CSSTransition key={project._id} timeout={200} classNames="proyecto">
           <Project  project={project}></Project>
         </CSSTransition>
       ))}

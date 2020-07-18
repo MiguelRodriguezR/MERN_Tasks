@@ -36,7 +36,7 @@ exports.createTask = async (req, res) => {
 
 exports.getTasks = async (req, res) => {
   try {
-    const { project } = req.body;
+    const { project } = req.query;
 
     const projectProve = await Project.findById(project);
     if (!projectProve) {
@@ -56,7 +56,7 @@ exports.getTasks = async (req, res) => {
 
 exports.updateTask = async (req, res) => {
   try {
-    const { project, name, state } = req.body;
+    const { project, name, complete } = req.body;
 
     const projectProve = await Project.findById(project);
     const taskProve = await Task.findById(req.params.id);
@@ -69,8 +69,8 @@ exports.updateTask = async (req, res) => {
     }
 
     const newTask = {};
-    if (name) newTask.name = name;
-    if (state) newTask.state = state;
+    newTask.name = name;
+    newTask.complete = complete;
 
     const task = await Task.findOneAndUpdate({ _id: req.params.id }, newTask, {
       new: true,
@@ -87,7 +87,7 @@ exports.updateTask = async (req, res) => {
 exports.deleteTask = async (req, res) =>{
     try {
        
-        const { project } = req.body;
+        const { project } = req.query;
 
         const projectProve = await Project.findById(project);
         const taskProve = await Task.findById(req.params.id);

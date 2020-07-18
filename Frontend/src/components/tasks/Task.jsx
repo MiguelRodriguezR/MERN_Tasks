@@ -5,19 +5,19 @@ import ProjectContext from "../../context/projects/projectContex";
 const Task = ({ task }) => {
 
   const tasksContext = useContext(TaskContext);
-  const { deleteTask, getProjectTasks, changeTaskState, saveActualTask } = tasksContext;
+  const { deleteTask, getProjectTasks, updateTask, saveActualTask } = tasksContext;
 
   const projectContext = useContext(ProjectContext);
   const {project} = projectContext;
 
   const deteT = () => {
-    deleteTask(task.id);
+    deleteTask(task.id,project.id);
     getProjectTasks(project.id)
   }
 
   const modifyState =() =>{
     task.complete = !task.complete
-    changeTaskState(task);
+    updateTask(task);
   }
 
   const selectTask = () => {
